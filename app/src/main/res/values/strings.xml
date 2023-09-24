@@ -1,3 +1,7 @@
 <resources>
-    <string name="app_name">MovieApp</string>
+    <string name="app_name">FilmFon</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello android fragment</string>
+
+    <string name="format_vote">%.1f</string>
 </resources>
