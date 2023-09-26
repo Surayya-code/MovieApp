@@ -174,7 +174,7 @@ tools:context=".presentation.auth.InputOptionFragment">
 
 
     <com.google.android.material.button.MaterialButton
-        android:id="@+id/buttonEmail"
+        android:id="@+id/btnSignin"
         android:layout_width="0dp"
         android:layout_height="60dp"
         android:layout_marginTop="40dp"
@@ -198,10 +198,10 @@ tools:context=".presentation.auth.InputOptionFragment">
         android:textColor="#5B5B5E"
         android:textSize="14sp"
         app:layout_constraintEnd_toStartOf="@+id/guideline11"
-        app:layout_constraintTop_toBottomOf="@+id/buttonEmail" />
+        app:layout_constraintTop_toBottomOf="@+id/btnSignin" />
 
     <TextView
-        android:id="@+id/letsStartBtn"
+        android:id="@+id/singUpText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="5dp"

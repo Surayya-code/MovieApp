@@ -10,11 +10,14 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class InputOptionFragment : BaseFragment<FragmentInputOptionBinding>(FragmentInputOptionBinding::inflate) {
     override fun onViewCreateFinish() {
-        binding.buttonEmail.setOnClickListener {
+        binding.btnSignin.setOnClickListener {
+            findNavController().navigate(R.id.action_inputOptionFragment_to_signInFragment)
+        }
+        binding.singUpText.setOnClickListener(){
             findNavController().navigate(R.id.action_inputOptionFragment_to_signUpFragment)
         }
-        binding.letsStartBtn.setOnClickListener(){
-            findNavController().navigate(R.id.action_inputOptionFragment_to_signUpFragment)
+        binding.imageViewBack.setOnClickListener {
+            findNavController().navigateUp()
         }
     }
 

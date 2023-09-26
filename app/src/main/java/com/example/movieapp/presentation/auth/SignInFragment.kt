@@ -1,10 +1,12 @@
 package com.example.movieapp.presentation.auth
 
 import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.example.movieapp.common.base.BaseFragment
 import androidx.navigation.fragment.findNavController
+import com.example.movieapp.R
 import com.example.movieapp.common.utils.RegisterValidation
 import com.example.movieapp.common.utils.User
 import com.example.movieapp.common.utils.Resource
@@ -19,13 +21,16 @@ import kotlinx.coroutines.withContext
 @AndroidEntryPoint
 class SignInFragment : BaseFragment<FragmentSignInBinding>(FragmentSignInBinding::inflate) {
     private val viewModel by viewModels<SigInMVVM>()
-
+    var isChecked = false
     override fun onViewCreateFinish() {
+        onBackPress()
+        checkClick()
         binding.signUpText.setOnClickListener {
-            findNavController().navigate(SignInFragmentDirections.actionSignInFragmentToSignUpFragment())
+            findNavController().navigate(SignInFragmentDirections
+                           .actionSignInFragmentToSignUpFragment())
         }
 
-
+ //Email and Password
         lifecycleScope.launch {
             viewModel.validation.collect { validation ->
                 if (validation.email is RegisterValidation.Failed) {
@@ -47,8 +52,7 @@ class SignInFragment : BaseFragment<FragmentSignInBinding>(FragmentSignInBinding
             }
         }
 
-
-
+//SignIn
         binding.apply {
             signInBtn.setOnClickListener {
                 val user = User(
@@ -60,13 +64,31 @@ class SignInFragment : BaseFragment<FragmentSignInBinding>(FragmentSignInBinding
             }
         }
 
+//forgotText
         binding.textForgot.setOnClickListener {
             setupBottomSheetDialog { email ->
                 viewModel.resetPassword(email)
             }
         }
-
-
+    }
+///checkBox
+      private fun checkClick(){
+        binding.checkBoxRemember.setOnClickListener {
+            val imageRes = if(isChecked){
+                R.drawable.check_box_outline
+            }else{
+                R.drawable.check_box
+            }
+            binding.checkBoxRemember.setButtonIconDrawableResource(imageRes)
+            isChecked = !isChecked
+        }
+    }
+    private fun onBackPress(){
+        requireActivity().onBackPressedDispatcher.addCallback(this,object : OnBackPressedCallback(true){
+            override fun handleOnBackPressed() {
+              // findNavController().navigate(SignInFragmentDirections.tosplash())
+            }
+        })
     }
 
     override fun observeEvents() {
@@ -74,31 +96,24 @@ class SignInFragment : BaseFragment<FragmentSignInBinding>(FragmentSignInBinding
             authResult.observe(viewLifecycleOwner) {
                 when (it) {
                     is Resource.Loading -> {
-                        //binding.signInBtn.startAnimation()
                     }
-
                     is Resource.Success -> {
-                        //binding.signInBtn.revertAnimation()
                         findNavController().navigate(SignInFragmentDirections.toHome())
                     }
-
                     is Resource.Error -> {
-                        //binding.signInBtn.revertAnimation()
-                        Toast.makeText(context, "Login Failed", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(context,it.exception.toString(), Toast.LENGTH_SHORT).show()
                     }
                 }
             }
 
             resetPassword.observe(viewLifecycleOwner) {
                 when (it) {
-                    is Resource.Loading -> {
-
-                    }
+                    is Resource.Loading -> {}
 
                     is Resource.Success -> {
                         Snackbar.make(
                             requireView(),
-                            "Reset link was sent to your email",
+                            "Reset link was sent to your email address",
                             Snackbar.LENGTH_LONG
                         ).show()
                     }

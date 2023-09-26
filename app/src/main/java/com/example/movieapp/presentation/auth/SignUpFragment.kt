@@ -22,13 +22,10 @@ import kotlinx.coroutines.withContext
 class SignUpFragment : BaseFragment<FragmentSignUpBinding>(FragmentSignUpBinding::inflate) {
 
     private val viewModel by viewModels<SignUpMVVM>()
-
+    var isChecked = false
     override fun onViewCreateFinish() {
-
-        binding.checkBoxRemember.setOnClickListener { view ->
-            checkBoxClick(view)
-        }
-
+        checkBox()
+        //validations
         lifecycleScope.launch {
             viewModel.validation.collect{validation ->
                 if (validation.email is RegisterValidation.Failed){
@@ -49,7 +46,7 @@ class SignUpFragment : BaseFragment<FragmentSignUpBinding>(FragmentSignUpBinding
 
             }
         }
-
+///Create User and password
         binding.apply {
             signUpBtn.setOnClickListener {
                 val user = User(
@@ -59,7 +56,7 @@ class SignUpFragment : BaseFragment<FragmentSignUpBinding>(FragmentSignUpBinding
                 viewModel.createAccountWithEmailAndPassword(user,password)
                 viewModel.saveEmail(user.email)
                 viewModel.savePassword(password)
-               findNavController().navigate(SignUpFragmentDirections.actionSignUpFragmentToSignInFragment())
+
             }
         }
 
@@ -70,25 +67,22 @@ class SignUpFragment : BaseFragment<FragmentSignUpBinding>(FragmentSignUpBinding
     }
 
 
-
+///Create Account
     override fun observeEvents() {
         with(viewModel) {
             authResult.observe(viewLifecycleOwner) {
                 with(binding){
                     when (it) {
                         is Resource.Success -> {
-                          //  binding.signUpBtn.revertAnimation()
                             Toast.makeText(context, "Account created", Toast.LENGTH_SHORT).show()
                             findNavController().navigate(SignUpFragmentDirections.actionSignUpFragmentToSignInFragment())
                         }
 
                         is Resource.Error -> {
                             Toast.makeText(context, "An error occurred", Toast.LENGTH_SHORT).show()
-                           // binding.signUpBtn.revertAnimation()
                         }
 
                         is Resource.Loading -> {
-                           // binding.signUpBtn.startAnimation()
                         }
                         else ->Unit
                     }
@@ -98,21 +92,19 @@ class SignUpFragment : BaseFragment<FragmentSignUpBinding>(FragmentSignUpBinding
     }
 
 
-    fun checkBoxClick(view: View) {
-  if (view is MaterialCheckBox){
-      val checked:Boolean=view.isChecked
-
-      when(view.id){
-          R.id.checkBoxRemember->{
-              if(checked){
-                  Snackbar.make(view,"Save Your Password", Snackbar.LENGTH_LONG).show()
-              }else{
-                  Snackbar.make(view,"We don't save Your Password", Snackbar.LENGTH_LONG).show()
-              }
-          }
-      }
+    //CheckClick
+  fun checkBox(){
+        binding.checkBoxRemember.setOnClickListener { view ->
+            val imageRes = if(isChecked){
+                R.drawable.check_box_outline
+            }else{
+                R.drawable.check_box
+            }
+            binding.checkBoxRemember.setButtonIconDrawableResource(imageRes)
+            //  binding.checkBoxRemember.setImageResource(imageRes)
+            isChecked = !isChecked
+        }
   }
-    }
 
 
 
