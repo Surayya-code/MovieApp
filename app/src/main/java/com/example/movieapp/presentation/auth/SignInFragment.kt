@@ -11,12 +11,14 @@ import com.example.movieapp.common.utils.RegisterValidation
 import com.example.movieapp.common.utils.User
 import com.example.movieapp.common.utils.Resource
 import com.example.movieapp.common.utils.setupBottomSheetDialog
+import com.example.movieapp.common.utils.showToast
 import com.example.movieapp.databinding.FragmentSignInBinding
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import www.sanju.motiontoast.MotionToastStyle
 
 @AndroidEntryPoint
 class SignInFragment : BaseFragment<FragmentSignInBinding>(FragmentSignInBinding::inflate) {
@@ -101,7 +103,7 @@ class SignInFragment : BaseFragment<FragmentSignInBinding>(FragmentSignInBinding
                         findNavController().navigate(SignInFragmentDirections.toHome())
                     }
                     is Resource.Error -> {
-                        Toast.makeText(context,it.exception.toString(), Toast.LENGTH_SHORT).show()
+                        requireActivity().showToast("Error download trailers", it.exception, MotionToastStyle.ERROR)
                     }
                 }
             }

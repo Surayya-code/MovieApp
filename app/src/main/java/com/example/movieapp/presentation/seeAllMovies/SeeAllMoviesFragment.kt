@@ -6,10 +6,12 @@ import androidx.navigation.fragment.navArgs
 import com.example.movieapp.common.base.BaseFragment
 import com.example.movieapp.common.utils.MovieTypeEnum
 import com.example.movieapp.common.utils.gone
+import com.example.movieapp.common.utils.showToast
 import com.example.movieapp.databinding.FragmentSeeAllMoviesBinding
 import com.example.movieapp.domein.state.MovieUiState
 import com.example.movieapp.presentation.seeAllMovies.adapter.MovieListAdapter
 import dagger.hilt.android.AndroidEntryPoint
+import www.sanju.motiontoast.MotionToastStyle
 
 @AndroidEntryPoint
 class SeeAllMoviesFragment : BaseFragment<FragmentSeeAllMoviesBinding>(FragmentSeeAllMoviesBinding::inflate) {
@@ -40,7 +42,7 @@ class SeeAllMoviesFragment : BaseFragment<FragmentSeeAllMoviesBinding>(FragmentS
 
                         is MovieUiState.Error -> {
                             progressBarloading.gone()
-                            Toast.makeText(context, "Error", Toast.LENGTH_SHORT).show()
+                            requireActivity().showToast("Error", it.message, MotionToastStyle.ERROR)
                         }
 
                         is MovieUiState.Loading -> {

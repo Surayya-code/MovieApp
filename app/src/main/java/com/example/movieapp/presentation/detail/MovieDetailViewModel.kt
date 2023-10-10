@@ -7,9 +7,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.movieapp.common.utils.Resource
-import com.example.movieapp.data.local.db.MyListDb
-import com.example.movieapp.data.service.MyListDao
-import com.example.movieapp.data.service.RoomDb
+import com.example.movieapp.data.local.db.FavoriteDTO
 import com.example.movieapp.domein.repository.movieRepo
 import com.example.movieapp.domein.state.CastUiState
 import com.example.movieapp.domein.state.DetailUiState
@@ -22,27 +20,13 @@ import javax.inject.Inject
 @HiltViewModel
 class MovieDetailViewModel @Inject constructor(
     private val movieRepository: movieRepo,
-    private val myListDao: MyListDao,
-    application: Application
-): AndroidViewModel(application)  {
+): ViewModel()  {
 
     private val _detailMovies= MutableLiveData<DetailUiState>()
     val detailMovies: LiveData<DetailUiState> = _detailMovies
 
-
-
     private val _cast= MutableLiveData<CastUiState>()
     val cast: LiveData<CastUiState> = _cast
-
-
-
-fun addMyList(myList: MyListDb) {
-    viewModelScope.launch(Dispatchers.IO) {
-        myListDao.insertData(myList)
-    }
-}
-
-
 
     fun getDetailMovie(id : Int) {
         viewModelScope.launch {
@@ -88,8 +72,11 @@ fun addMyList(myList: MyListDb) {
         }
     }
 
-
-
+    fun addFavorite(product: FavoriteDTO){
+        viewModelScope.launch {
+            movieRepository.addFav(product)
+        }
+    }
 
 
 }

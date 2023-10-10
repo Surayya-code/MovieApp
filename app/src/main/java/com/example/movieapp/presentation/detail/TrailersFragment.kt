@@ -1,14 +1,16 @@
 package com.example.movieapp.presentation.detail
 
-import android.widget.Toast
+
 import androidx.fragment.app.viewModels
 import com.example.movieapp.common.base.BaseFragment
 import com.example.movieapp.common.utils.gone
+import com.example.movieapp.common.utils.showToast
 import com.example.movieapp.common.utils.visible
 import com.example.movieapp.databinding.FragmentTrailersBinding
 import com.example.movieapp.domein.state.TrailerUiState
 import com.example.movieapp.presentation.detail.adapter.TrailerAdapter
 import dagger.hilt.android.AndroidEntryPoint
+import www.sanju.motiontoast.MotionToastStyle
 
 
 @AndroidEntryPoint
@@ -37,7 +39,7 @@ class TrailersFragment(private val id: Int)
                     binding.progressBar4.gone()
                     binding.rvTrailer.gone()
                     binding.trailerEmpty.visible()
-                    Toast.makeText(context, "Error trailers", Toast.LENGTH_SHORT).show()
+                    requireActivity().showToast("Error download trailers", it.message, MotionToastStyle.ERROR)
                 }
 
                 is TrailerUiState.Loading -> {

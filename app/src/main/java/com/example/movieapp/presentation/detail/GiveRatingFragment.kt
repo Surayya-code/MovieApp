@@ -8,12 +8,14 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.navArgs
+import com.example.movieapp.common.utils.showToast
 import com.example.movieapp.data.dto.DetailsResponseModelItem
 import com.example.movieapp.databinding.FragmentGiveRatingBinding
 import com.example.movieapp.domein.state.DetailUiState
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.taufiqrahman.reviewratings.BarLabels
 import dagger.hilt.android.AndroidEntryPoint
+import www.sanju.motiontoast.MotionToastStyle
 import kotlin.random.Random
 @AndroidEntryPoint
 class GiveRatingFragment : BottomSheetDialogFragment() {
@@ -67,8 +69,7 @@ class GiveRatingFragment : BottomSheetDialogFragment() {
                 }
 
                 is DetailUiState.Error -> {
-                    Toast.makeText(context, "Error download details", Toast.LENGTH_SHORT).show()
-
+                    requireActivity().showToast("Error download trailers", it.message, MotionToastStyle.ERROR)
                 }
 
                 is DetailUiState.Loading -> {
@@ -92,7 +93,7 @@ class GiveRatingFragment : BottomSheetDialogFragment() {
         }
 
         binding.buttonSubmit.setOnClickListener {
-            Toast.makeText(context, "Your rating was Submitted", Toast.LENGTH_SHORT).show()
+            requireActivity().showToast("Your rating was Submitted", "", MotionToastStyle.INFO)
             dialog?.dismiss()
         }
     }

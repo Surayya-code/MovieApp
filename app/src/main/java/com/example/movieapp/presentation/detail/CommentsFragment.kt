@@ -4,11 +4,13 @@ import android.widget.Toast
 import androidx.fragment.app.viewModels
 import com.example.movieapp.common.base.BaseFragment
 import com.example.movieapp.common.utils.gone
+import com.example.movieapp.common.utils.showToast
 import com.example.movieapp.common.utils.visible
 import com.example.movieapp.databinding.FragmentCommentsBinding
 import com.example.movieapp.domein.state.ReviewUiState
 import com.example.movieapp.presentation.detail.adapter.ReviewAdapter
 import dagger.hilt.android.AndroidEntryPoint
+import www.sanju.motiontoast.MotionToastStyle
 
 
 @AndroidEntryPoint
@@ -37,7 +39,8 @@ class CommentsFragment(private val id: Int) :
                     binding.progressBar.gone()
                     binding.rvReview.gone()
                     binding.trailerEmpty.visible()
-                    Toast.makeText(context, "Error download trailers", Toast.LENGTH_SHORT).show()
+                    requireActivity().showToast("Error download trailers", it.message, MotionToastStyle.ERROR)
+
                 }
 
                 is ReviewUiState.Loading -> {

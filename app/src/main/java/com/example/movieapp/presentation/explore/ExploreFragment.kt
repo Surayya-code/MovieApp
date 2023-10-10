@@ -5,12 +5,14 @@ import androidx.navigation.fragment.findNavController
 import com.example.movieapp.common.base.BaseFragment
 import androidx.appcompat.widget.SearchView
 import com.example.movieapp.common.utils.gone
+import com.example.movieapp.common.utils.showToast
 import com.example.movieapp.common.utils.visible
 import com.example.movieapp.databinding.FragmentExploreBinding
 import com.example.movieapp.domein.state.MovieUiState
 import com.example.movieapp.presentation.explore.adapter.ExploreAdapter
 import com.example.movieapp.presentation.explore.adapter.SearchAdapter
 import dagger.hilt.android.AndroidEntryPoint
+import www.sanju.motiontoast.MotionToastStyle
 
 @AndroidEntryPoint
 class ExploreFragment
@@ -99,6 +101,7 @@ class ExploreFragment
                         }
                         is MovieUiState.Error -> {
                             loadingExplore.gone()
+                            requireActivity().showToast("Error", it.message, MotionToastStyle.ERROR)
                             notFoundPage.visible()
 
                         }

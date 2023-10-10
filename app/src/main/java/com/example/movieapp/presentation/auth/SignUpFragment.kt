@@ -10,6 +10,7 @@ import com.example.movieapp.R
 import com.example.movieapp.common.utils.RegisterValidation
 import com.example.movieapp.common.utils.User
 import com.example.movieapp.common.utils.Resource
+import com.example.movieapp.common.utils.showToast
 import com.example.movieapp.databinding.FragmentSignUpBinding
 import com.google.android.material.checkbox.MaterialCheckBox
 import com.google.android.material.snackbar.Snackbar
@@ -17,6 +18,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import www.sanju.motiontoast.MotionToastStyle
 
 @AndroidEntryPoint
 class SignUpFragment : BaseFragment<FragmentSignUpBinding>(FragmentSignUpBinding::inflate) {
@@ -74,12 +76,12 @@ class SignUpFragment : BaseFragment<FragmentSignUpBinding>(FragmentSignUpBinding
                 with(binding){
                     when (it) {
                         is Resource.Success -> {
-                            Toast.makeText(context, "Account created", Toast.LENGTH_SHORT).show()
-                            findNavController().navigate(SignUpFragmentDirections.actionSignUpFragmentToSignInFragment())
+                            requireActivity().showToast("Account created", "", MotionToastStyle.SUCCESS)
+                             findNavController().navigate(SignUpFragmentDirections.actionSignUpFragmentToSignInFragment())
                         }
 
                         is Resource.Error -> {
-                            Toast.makeText(context, "An error occurred", Toast.LENGTH_SHORT).show()
+                            requireActivity().showToast("An error occurred", it.exception, MotionToastStyle.ERROR)
                         }
 
                         is Resource.Loading -> {
@@ -101,7 +103,6 @@ class SignUpFragment : BaseFragment<FragmentSignUpBinding>(FragmentSignUpBinding
                 R.drawable.check_box
             }
             binding.checkBoxRemember.setButtonIconDrawableResource(imageRes)
-            //  binding.checkBoxRemember.setImageResource(imageRes)
             isChecked = !isChecked
         }
   }

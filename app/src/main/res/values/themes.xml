@@ -14,4 +14,11 @@
     <item name="android:windowExitAnimation">@anim/slide_out_bottom</item>
 
 </style>
+    <style name="CustomChipBtnStyle" parent="Widget.Material3.Chip.Suggestion">
+        <item name="chipBackgroundColor">@color/white</item>
+        <item name="android:textColor">@color/red</item>
+        <item name="chipStrokeColor">@color/red</item>
+        <item name="strokeWidth">3dp</item>
+    </style>
+
 </resources>

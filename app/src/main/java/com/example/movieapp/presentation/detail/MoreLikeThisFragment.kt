@@ -5,11 +5,13 @@ import android.widget.Toast
 import androidx.fragment.app.viewModels
 import com.example.movieapp.common.base.BaseFragment
 import com.example.movieapp.common.utils.gone
+import com.example.movieapp.common.utils.showToast
 import com.example.movieapp.common.utils.visible
 import com.example.movieapp.databinding.FragmentMoreLikeThisBinding
 import com.example.movieapp.domein.state.RecommendationUiState
 import com.example.movieapp.presentation.detail.adapter.RecommendationAdapter
 import dagger.hilt.android.AndroidEntryPoint
+import www.sanju.motiontoast.MotionToastStyle
 
 @AndroidEntryPoint
 class MoreLikeThisFragment(private val id: Int) : BaseFragment<FragmentMoreLikeThisBinding>(FragmentMoreLikeThisBinding::inflate) {
@@ -36,7 +38,7 @@ class MoreLikeThisFragment(private val id: Int) : BaseFragment<FragmentMoreLikeT
                     binding.progressBar2.gone()
                     binding.rvRecommendation.gone()
                     binding.trailerEmpty.visible()
-                    Toast.makeText(context, "Error download trailers", Toast.LENGTH_SHORT).show()
+                    requireActivity().showToast("Error download trailers", it.message, MotionToastStyle.ERROR)
                 }
 
                 is RecommendationUiState.Loading -> {

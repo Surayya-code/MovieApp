@@ -9,4 +9,5 @@
     <color name="second_btn_text">#E21221</color>
     <color name="dark_blue">#00427A</color>
     <color name="light_blue">#005FAF</color>
+    <color name="chip_bg">#FFFFFF</color>
 </resources>

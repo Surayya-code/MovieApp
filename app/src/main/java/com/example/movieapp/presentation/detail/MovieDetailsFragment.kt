@@ -2,14 +2,16 @@ package com.example.movieapp.presentation.detail
 
 import android.content.Intent
 import android.widget.Toast
+
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.example.movieapp.common.base.BaseFragment
 import com.example.movieapp.common.utils.gone
+import com.example.movieapp.common.utils.showToast
 import com.example.movieapp.common.utils.visible
 import com.example.movieapp.data.dto.DetailsResponseModelItem
-import com.example.movieapp.data.local.db.MyListDb
+import com.example.movieapp.data.local.db.FavoriteDTO
 import com.example.movieapp.databinding.FragmentMovieDetailsBinding
 import com.example.movieapp.domein.state.CastUiState
 import com.example.movieapp.domein.state.DetailUiState
@@ -18,6 +20,7 @@ import com.example.movieapp.presentation.detail.adapter.GenreAdapter
 import com.example.movieapp.presentation.detail.adapter.ViewPagerTabLayoutAdapter
 import com.google.android.material.tabs.TabLayoutMediator
 import dagger.hilt.android.AndroidEntryPoint
+import www.sanju.motiontoast.MotionToastStyle
 
 @AndroidEntryPoint
 class MovieDetailsFragment :
@@ -38,59 +41,58 @@ class MovieDetailsFragment :
         getData(args.id.toInt())
         setRecyclerViews()
         setViewPager()
-        youtubePlay()
-        saveMovie()
-        back()
+        setButtons()
 
 
+
+    }
+
+    override fun observeEvents() {
+        viewModel.cast.observe(viewLifecycleOwner) {
+            when (it) {
+                is CastUiState.Success -> {
+                    castAdapter.differ.submitList(it.data.cast)
+                }
+
+                is CastUiState.Error -> {
+                    requireActivity().showToast("Error download cast", "", MotionToastStyle.ERROR)
+                }
+
+                is CastUiState.Loading -> {}
+            }
         }
 
+        viewModel.detailMovies.observe(viewLifecycleOwner) {
+            when (it) {
+                is DetailUiState.Success -> {
+                    binding.movieDetail = it.data
+                    genreAdapter.differ.submitList(it.data.genres)
+                    movie = it.data
+                    // setData(it.data)
+                    binding.progressBarDetail.gone()
+                }
 
-    //goBack
-    private fun back(){
-        binding.imageViewBack.setOnClickListener {
-            findNavController().navigateUp()
+                is DetailUiState.Error -> {
+                    requireActivity().showToast(
+                        "Error download details",
+                        it.message,
+                        MotionToastStyle.ERROR
+                    )
+                    binding.progressBarDetail.gone()
+                }
+
+                is DetailUiState.Loading -> {
+                    binding.progressBarDetail.visible()
+                }
+
+            }
         }
     }
+
+
     private fun getData(id: Int) {
         viewModel.getDetailMovie(id)
         viewModel.getCastDetail(id)
-    }
-   // saveMovie
-   private fun saveMovie(){
-       binding.movieSave.setOnClickListener {
-           val movieToSave = binding.movieDetail
-
-           if (movieToSave != null) {
-               viewModel.addMyList(
-                   MyListDb(
-                       movieToSave.id,
-                       movieToSave.title,
-                       movieToSave.posterPath,
-                       movieToSave.voteAverage
-                   )
-               )
-               Toast.makeText(context, "${movieToSave.title} saved in movie list", Toast.LENGTH_SHORT).show()
-           } else {
-               Toast.makeText(context, "Error saving movie", Toast.LENGTH_SHORT).show()
-           }
-
-
-       }
-
-       binding.imageViewBack.setOnClickListener {
-           findNavController().navigateUp()
-       }
-   }
-
-
-
-
-    //youtubePLay
-    private fun youtubePlay(){
-        binding.buttonPlay.setOnClickListener {
-          // Navigation.findNavController(it).navigate(MovieDetailsFragmentDirections.actionToYoutubeFragment(movie.key))
-        }
     }
 
     //DownloadButton
@@ -110,17 +112,13 @@ class MovieDetailsFragment :
     //shateAnotherApp
     private fun sendToAnotherApp() {
         binding.imageViewSend.setOnClickListener {
-            shareMovie()
+            val sendIntent: Intent =Intent().apply{
+                action=Intent.ACTION_SEND
+                putExtra(Intent.EXTRA_TEXT,"Sent to")
+                type="text/plain"
+            }
+            startActivity(Intent.createChooser(sendIntent,null))
         }
-    }
-
-    private fun shareMovie(){
-        val sendIntent: Intent =Intent().apply{
-            action=Intent.ACTION_SEND
-            putExtra(Intent.EXTRA_TEXT,"Sent to")
-            type="text/plain"
-        }
-        startActivity(Intent.createChooser(sendIntent,null))
     }
 
    //tabLayout
@@ -147,42 +145,29 @@ class MovieDetailsFragment :
         binding.recyclerViewCast.adapter = castAdapter
     }
 
-    override fun observeEvents() {
-        viewModel.cast.observe(viewLifecycleOwner){
-            when (it) {
-                is CastUiState.Success -> {
-                  castAdapter.differ.submitList(it.data.cast)
-                }
 
-                is CastUiState.Error -> {
-                    Toast.makeText(context, "Error download cast", Toast.LENGTH_SHORT).show()
-                }
-                is CastUiState.Loading -> { }
+
+    private fun setButtons(){
+        with(binding){
+            movieSave.setOnClickListener {
+                viewModel.addFavorite(
+                    FavoriteDTO(
+                      movie.id,
+                        movie.title,
+                        movie.posterPath,
+                        movie.voteAverage
+                    ))
+                Toast.makeText(context, "${movie.title} saved in movie list", Toast.LENGTH_SHORT).show()
+            }
+            imageViewBack.setOnClickListener{
+                findNavController().popBackStack()
             }
         }
 
-        viewModel.detailMovies.observe(viewLifecycleOwner){
-            when (it) {
-                is DetailUiState.Success -> {
-                    binding.movieDetail = it.data
-                    genreAdapter.differ.submitList(it.data.genres)
-                    movie = it.data
-                    binding.progressBarDetail.gone()
-                }
-
-                is DetailUiState.Error -> {
-                    Toast.makeText(context, "Error download details", Toast.LENGTH_SHORT).show()
-                    binding.progressBarDetail.gone()
-                }
-
-                is DetailUiState.Loading -> {
-                    binding.progressBarDetail.visible()
-                }
-
-            }
-        }
+    }
     }
 
-    }
+
+
 
 

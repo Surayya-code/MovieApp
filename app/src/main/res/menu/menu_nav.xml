@@ -6,7 +6,7 @@
         android:icon="@drawable/home"/>
     <item android:title="Explore"
           android:id="@+id/exploreFragment"
-        android:icon="@drawable/direction"/>
+        android:icon="@drawable/explore"/>
     <item android:title="My List"
           android:id="@+id/myListFragment"
         android:icon="@drawable/save_instagram"/>

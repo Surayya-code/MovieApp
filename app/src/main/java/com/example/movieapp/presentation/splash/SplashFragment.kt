@@ -14,7 +14,7 @@ class SplashFragment : BaseFragment<FragmentSplashBinding>(FragmentSplashBinding
     override fun onViewCreateFinish() {
         binding.apply {
             lottie.alpha = 0f
-            lottie.animate().setDuration(2500).alpha(1f).start()
+            lottie.animate().setDuration(300).alpha(1f).start()
         }
     }
 
