@@ -4,12 +4,12 @@
 #  What I used when writing this app : 
 
 * MVVM with Clean Architecture
-* * LiveData
+* LiveData
 * Lifecycle
 * ViewModel
 * View Binding
 * DataBinding
-* Material Design 3
+* Material Design 
 * Coroutines & Flow
 * Hilt for Dependency Injection
 * Navigation Component
@@ -18,9 +18,8 @@
 * Firebase Authentication
 * Glide
 * Retrofit
-* Security Crypto
 * Lottie animation
-* ViewPager2
+* ViewPager
 * Youtube Player
 
 # Screens
